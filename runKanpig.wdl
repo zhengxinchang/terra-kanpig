@@ -32,10 +32,10 @@ task RunKanpig {
         String sample
         Int threads
     }
+    String outputs = "~{sample}.kanpig.vcf.gz"
 
     command <<<
-	
-	output="~{sample}.kanpig.vcf.gz"	
+
 
         /software/kanpig --input ~{variants} \
             --bam ~{bam} \
@@ -46,15 +46,15 @@ task RunKanpig {
             --maxpaths 1000 \
             --gpenalty 0.04 \
             --threads ~{threads} \
-        | bcftools sort -T $TMPDIR -O z -o ~{output}
-	
-	tabix -p vcf  ~{output}
-	
+        | bcftools sort -T $TMPDIR -O z -o ~{outputs}
+    
+    tabix -p vcf  ~{outputs}
+    
     >>>
 
     output {
-        File sorted_output = "~{output}"
-        File sorted_output_idx = "~{output}.tbi"
+        File sorted_output = "~{outputs}"
+        File sorted_output_idx = "~{outputs}.tbi"
     }
 
     runtime {
