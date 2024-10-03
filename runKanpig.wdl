@@ -14,7 +14,9 @@ workflow KanpigWorkflow {
     call RunKanpig {
         input:
             variants = variants,
+            variants_tbi = variants_tbi,
             bam = bam,
+            bai = bai,
             reference = reference,
             sample = sample,
             threads = threads,
@@ -29,7 +31,10 @@ workflow KanpigWorkflow {
 task RunKanpig {
     input {
         File variants
+        File variants_tbi
+        File reference
         File bam
+        File bai
         File reference
         String sample
         Int threads
