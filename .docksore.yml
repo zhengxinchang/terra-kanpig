@@ -1,0 +1,10 @@
+version: 1.2
+workflows:
+  - subclass: WDL
+    primaryDescriptorPath: /runKanpig.wdl
+    testParameterFiles:
+      - /test.wdl.json
+    authors:
+      - orcid: 0000-0001-5739-861X
+    name: kanpig-terra
+    topic:  kanpig-terra
