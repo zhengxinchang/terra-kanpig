@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
 RUN mkdir -p /software/
 COPY ./src/kanpig /software/
+RUN chmod a+x /software/kanpig
 COPY ./assets /
 # install bcftools
 
@@ -14,7 +15,7 @@ RUN apt-get update && apt-get install -y \
   ncurses-dev \
   wget \
   zlib1g-dev \
-  samtools
+  tabix
 
 ENV BCFTOOLS_INSTALL_DIR=/opt/bcftools
 ENV BCFTOOLS_VERSION=1.21
