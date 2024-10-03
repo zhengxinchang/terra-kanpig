@@ -3,7 +3,9 @@ version 1.0
 workflow KanpigWorkflow {
     input {
         File variants
+        File variants_tbi
         File bam
+        File bai
         File reference
         String sample
         Int threads = 8
