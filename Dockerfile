@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
   make \
   ncurses-dev \
   wget \
-  zlib1g-dev
+  zlib1g-dev \
+  samtools
 
 ENV BCFTOOLS_INSTALL_DIR=/opt/bcftools
 ENV BCFTOOLS_VERSION=1.21
@@ -29,4 +30,6 @@ RUN make prefix=$BCFTOOLS_INSTALL_DIR && \
 WORKDIR /
 RUN ln -s $BCFTOOLS_INSTALL_DIR/bin/bcftools /usr/bin/bcftools && \
   rm -rf /tmp/bcftools-$BCFTOOLS_VERSION
+
+
 
