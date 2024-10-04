@@ -7,6 +7,7 @@ workflow KanpigWorkflow {
         File bam
         File bai
         File reference
+        File fai
         String sample
         Int threads = 8
     }
@@ -18,6 +19,7 @@ workflow KanpigWorkflow {
             bam = bam,
             bai = bai,
             reference = reference,
+            fai = fai,
             sample = sample,
             threads = threads,
     }
@@ -36,6 +38,7 @@ task RunKanpig {
         File bam
         File bai
         File reference
+         File fai
         String sample
         Int threads
     }
