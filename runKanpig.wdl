@@ -37,13 +37,12 @@ task RunKanpig {
         File reference
         File bam
         File bai
-        File reference
-         File fai
+        File fai
         String sample
         Int threads
     }
     String outputs = "~{sample}.kanpig.vcf.gz"
-    Int disk_size_gb = 200 + ceil(size(reference_fa,"GB")) + 100*ceil(size(input_vcf_gz,"GB")) + 2*ceil(size(alignments_bam,"GB"))
+    Int disk_size_gb = 200 + ceil(size(reference,"GB")) + 100*ceil(size(variants,"GB")) + 2*ceil(size(bam,"GB"))
     command <<<
 
 
