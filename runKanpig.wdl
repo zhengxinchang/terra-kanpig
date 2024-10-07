@@ -43,7 +43,7 @@ task RunKanpig {
         Int threads
     }
     String outputs = "~{sample}.kanpig.vcf.gz"
-
+    200 + ceil(size(reference_fa,"GB")) + 100*ceil(size(input_vcf_gz,"GB")) + 2*ceil(size(alignments_bam,"GB"))
     command <<<
 
 
@@ -70,7 +70,7 @@ task RunKanpig {
     runtime {
         docker: "quay.io/zhengxc93/terra-kanpig:latest"  
         cpu: threads
-        memory: "30 GB"  
-        disks: "local-disk 250 SSD"  
+        memory: "50 GB"  
+        disks: "local-disk " + disk_size_gb + " SSD"  
     }
 }
