@@ -47,8 +47,13 @@ task RunKanpig {
     String outputs = "~{sample}.kanpig.vcf.gz"
     Int disk_size_gb = 200 + ceil(size(reference,"GB")) + 100*ceil(size(variants,"GB")) + 2*ceil(size(bam,"GB"))
     command <<<
-        
-        sleep 10
+
+	workdir=/cromwell_root/kanpig_genotyped        
+
+        set -euxo pipefail
+        mkdir -p ${workdir}
+        cd ${workdir}
+ 
         EFFECTIVE_MEM_GB=~{ram_size_gb}
         EFFECTIVE_MEM_GB=$(( ${EFFECTIVE_MEM_GB} - 4 ))
 
@@ -57,6 +62,8 @@ task RunKanpig {
         N_THREADS=$(( ${N_SOCKETS} * ${N_CORES_PER_SOCKET} -1 ))
 
         df -h 
+
+	pwd
 
         /software/kanpig --input ~{variants} \
             --bam ~{bam} \
@@ -68,16 +75,16 @@ task RunKanpig {
             --gpenalty 0.04 \
             --debug \
             --threads ${N_THREADS}  \
-            --out tmp.vcf && echo "kanpig ok!" || "kanpig failed!"
+            --out ${workdir}/tmp.vcf && echo "kanpig ok!" || "kanpig failed!"
             
-        bcftools sort --max-mem ${EFFECTIVE_MEM_GB}G -O z tmp.vcf >  ~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
-        tabix -p vcf  ~{outputs} && echo "tabix ok!" || echo "tabix failed!"
+        bcftools sort --max-mem ${EFFECTIVE_MEM_GB}G -O z ${workdir}/tmp.vcf > ${workdir}/~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
+        tabix -p vcf  ${workdir}/~{outputs} && echo "tabix ok!" || echo "tabix failed!"
     
     >>>
 
     output {
-        File sorted_output = "~{outputs}"
-        File sorted_output_idx = "~{outputs}.tbi"
+        File sorted_output = "${workdir}/~{outputs}"
+        File sorted_output_idx = "${workdir}/~{outputs}.tbi"
     }
 
     runtime {
