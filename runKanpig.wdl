@@ -67,7 +67,7 @@ task RunKanpig {
             --maxpaths 1000 \
             --gpenalty 0.04 \
             --debug \
-            --threads ~{N_THREADS}  \
+            --threads ${N_THREADS}  \
             --out tmp.vcf && echo "kanpig ok!" || "kanpig failed!"
             
         bcftools sort --max-mem ~{EFFECTIVE_MEM_GB}G -O z tmp.vcf >  ~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
