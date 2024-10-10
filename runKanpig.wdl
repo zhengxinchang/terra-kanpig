@@ -48,7 +48,7 @@ task RunKanpig {
     Int disk_size_gb = 200 + ceil(size(reference,"GB")) + 100*ceil(size(variants,"GB")) + 2*ceil(size(bam,"GB"))
     command <<<
 
-    workdir=/cromwell_root/kanpig_genotyped        
+        workdir=/cromwell_root/kanpig_genotyped        
 
         set -euxo pipefail
         mkdir -p ${workdir}
@@ -63,7 +63,7 @@ task RunKanpig {
 
         df -h 
 
-    pwd
+        pwd
 
         /software/kanpig --input ~{variants} \
             --bam ~{bam} \
