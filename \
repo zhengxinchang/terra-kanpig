@@ -44,8 +44,8 @@ task RunKanpig {
     String outputs = "~{sample}.kanpig.vcf.gz"
     Int disk_size_gb = 200 + ceil(size(reference,"GB")) + 100*ceil(size(variants,"GB")) + 2*ceil(size(bam,"GB"))
     command <<<
-        
-        sleep 10
+	
+	sleep 10
 
         /software/kanpig --input ~{variants} \
             --bam ~{bam} \
@@ -55,10 +55,9 @@ task RunKanpig {
             --chunksize 500 \
             --maxpaths 1000 \
             --gpenalty 0.04 \
-            --debug \
             --threads ~{threads} \
-        | bcftools sort -T $TMPDIR -O z -o ~{outputs} && echo "kanpig ok" || "kanpig failed"
-        tabix -p vcf  ~{outputs} && echo "tabix ok" || echo "tabix failed"
+        | bcftools sort -T $TMPDIR -O z -o ~{outputs}
+        tabix -p vcf  ~{outputs}
     
     >>>
 
