@@ -70,7 +70,7 @@ task RunKanpig {
             --threads ${N_THREADS}  \
             --out tmp.vcf && echo "kanpig ok!" || "kanpig failed!"
             
-        bcftools sort --max-mem ~{EFFECTIVE_MEM_GB}G -O z tmp.vcf >  ~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
+        bcftools sort --max-mem ${EFFECTIVE_MEM_GB}G -O z tmp.vcf >  ~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
         tabix -p vcf  ~{outputs} && echo "tabix ok!" || echo "tabix failed!"
     
     >>>
