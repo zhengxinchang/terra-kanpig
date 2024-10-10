@@ -51,7 +51,7 @@ task RunKanpig {
 
         set -euxo pipefail
         mkdir -p ~{workdir}
-        cd ${workdir}
+        cd ~{workdir}
  
         EFFECTIVE_MEM_GB=~{ram_size_gb}
         EFFECTIVE_MEM_GB=$(( ${EFFECTIVE_MEM_GB} - 4 ))
