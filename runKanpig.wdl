@@ -10,6 +10,7 @@ workflow KanpigWorkflow {
         File fai
         String sample
         Int threads = 8
+        Int ram_size_gb = 64
     }
 
     call RunKanpig {
@@ -22,6 +23,7 @@ workflow KanpigWorkflow {
             fai = fai,
             sample = sample,
             threads = threads,
+            ram_size_gb = ram_size_gb
     }
 
     output {
@@ -40,12 +42,21 @@ task RunKanpig {
         File fai
         String sample
         Int threads
+        Int ram_size_gb
     }
     String outputs = "~{sample}.kanpig.vcf.gz"
     Int disk_size_gb = 200 + ceil(size(reference,"GB")) + 100*ceil(size(variants,"GB")) + 2*ceil(size(bam,"GB"))
     command <<<
         
         sleep 10
+        EFFECTIVE_MEM_GB=~{ram_size_gb}
+        EFFECTIVE_MEM_GB=$(( ${EFFECTIVE_MEM_GB} - 4 ))
+
+        N_SOCKETS="$(lscpu | grep '^Socket(s):' | awk '{print $NF}')"
+        N_CORES_PER_SOCKET="$(lscpu | grep '^Core(s) per socket:' | awk '{print $NF}')"
+        N_THREADS=$(( ${N_SOCKETS} * ${N_CORES_PER_SOCKET} -1 ))
+
+        df -h 
 
         /software/kanpig --input ~{variants} \
             --bam ~{bam} \
@@ -56,9 +67,11 @@ task RunKanpig {
             --maxpaths 1000 \
             --gpenalty 0.04 \
             --debug \
-            --threads ~{threads} \
-        | bcftools sort -T $TMPDIR -O z -o ~{outputs} && echo "kanpig ok" || "kanpig failed"
-        tabix -p vcf  ~{outputs} && echo "tabix ok" || echo "tabix failed"
+            --threads ~{N_THREADS}  \
+            --out tmp.vcf && echo "kanpig ok!" || "kanpig failed!"
+            
+        bcftools sort --max-mem ~{EFFECTIVE_MEM_GB}G -O z tmp.vcf >  ~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
+        tabix -p vcf  ~{outputs} && echo "tabix ok!" || echo "tabix failed!"
     
     >>>
 
@@ -70,7 +83,7 @@ task RunKanpig {
     runtime {
         docker: "quay.io/zhengxc93/terra-kanpig:latest"  
         cpu: threads
-        memory: "64 GB"  
+        memory: ram_size_gb + "GB"  
         disks: "local-disk " + disk_size_gb + " SSD"  
     }
 }
