@@ -60,11 +60,15 @@ task RunKanpig {
         N_CORES_PER_SOCKET="$(lscpu | grep '^Core(s) per socket:' | awk '{print $NF}')"
         N_THREADS=$(( ${N_SOCKETS} * ${N_CORES_PER_SOCKET} -1 ))
 
-        df -h 
+        df -h
+	echo "thread: ${N_THREADS}"
+	echo "diskusage: ~{disk_size_gb}"
+
+
 
         pwd
         export RUST_BACKTRACE="full"
-        /software/kanpig --input ~{variants} \
+        /usr/bin/time -v /software/kanpig --input ~{variants} \
             --bam ~{bam} \
             --reference ~{reference} \
             --sample ~{sample} \
@@ -72,13 +76,13 @@ task RunKanpig {
             --chunksize 500 \
             --maxpaths 1000 \
             --gpenalty 0.04 \
-            --debug \
             --threads ${N_THREADS}  \
             --out ~{workdir}/tmp.vcf && echo "kanpig ok!" || "kanpig failed!"
             
         bcftools sort --max-mem ${EFFECTIVE_MEM_GB}G -O z ~{workdir}/tmp.vcf > ~{workdir}/~{outputs} && echo "bcfsort ok!" || "bcfsort failed!"
         tabix -p vcf  ~{workdir}/~{outputs} && echo "tabix ok!" || echo "tabix failed!"
-    
+        ls -l ~{workdir}
+ 
     >>>
 
     output {
