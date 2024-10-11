@@ -94,6 +94,6 @@ task RunKanpig {
         docker: "quay.io/zhengxc93/terra-kanpig:latest"  
         cpu: threads
         memory: ram_size_gb + "GB"  
-        disks: "local-disk " + disk_size_gb + " HDD"  
+        disks: "local-disk " + disk_size_gb + " SSD"  
     }
 }
