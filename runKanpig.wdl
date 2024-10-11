@@ -63,7 +63,7 @@ task RunKanpig {
         df -h 
 
         pwd
-
+        export RUST_BACKTRACE="full"
         /software/kanpig --input ~{variants} \
             --bam ~{bam} \
             --reference ~{reference} \
@@ -90,6 +90,6 @@ task RunKanpig {
         docker: "quay.io/zhengxc93/terra-kanpig:latest"  
         cpu: threads
         memory: ram_size_gb + "GB"  
-        disks: "local-disk " + disk_size_gb + " SSD"  
+        disks: "local-disk " + disk_size_gb + " HDD"  
     }
 }
