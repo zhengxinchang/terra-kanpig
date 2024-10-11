@@ -64,8 +64,6 @@ task RunKanpig {
         echo "thread: ${N_THREADS}"
         echo "diskusage: ~{disk_size_gb}"
 
-
-
         pwd
         export RUST_BACKTRACE="full"
         /usr/bin/time -v /software/kanpig --input ~{variants} \
