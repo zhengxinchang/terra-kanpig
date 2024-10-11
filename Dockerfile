@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
   ncurses-dev \
   wget \
   zlib1g-dev \
-  tabix
+  tabix  \
+  time
 
 ENV BCFTOOLS_INSTALL_DIR=/opt/bcftools
 ENV BCFTOOLS_VERSION=1.21
