@@ -61,8 +61,8 @@ task RunKanpig {
         N_THREADS=$(( ${N_SOCKETS} * ${N_CORES_PER_SOCKET} -1 ))
 
         df -h
-	echo "thread: ${N_THREADS}"
-	echo "diskusage: ~{disk_size_gb}"
+    echo "thread: ${N_THREADS}"
+    echo "diskusage: ~{disk_size_gb}"
 
 
 
